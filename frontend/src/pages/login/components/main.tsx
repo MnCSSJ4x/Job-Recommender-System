@@ -31,6 +31,13 @@ const Main = () => {
         // Send the Firebase ID token to the backend server
         axios.post(BACKEND_HOME+'/signin', { token: idToken })
           .then(response => {
+            //use response to move to next page 
+            if(response.data.firstTime===true){
+
+            }
+            else{
+              
+            }
             console.log(response.data)
           })
           .catch(error => {

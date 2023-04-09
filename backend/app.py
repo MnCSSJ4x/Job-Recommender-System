@@ -4,6 +4,10 @@ import firebase_admin
 from firebase_admin import auth, credentials, firestore
 from flask_cors import CORS, cross_origin
 import requests
+import os
+from pyresparser import ResumeParser
+import tempfile
+import pathlib
 
 
 app = Flask(__name__)  # Initialze flask constructor
@@ -36,7 +40,7 @@ db = firestore.client()
 
 
 @app.route('/signin', methods=['POST'])
-@cross_origin(origins=['http://localhost:3001'])
+@cross_origin(origins=['*'])
 def firebase_signin():
     # Verify the Firebase ID token
     token = request.json['token']
@@ -77,6 +81,24 @@ def firebase_signin():
 
     # db.collection
     # Return a response to the client
+
+
+@app.route('/upload', methods=['POST'])
+@cross_origin(origins=['*'])
+def handle_upload_parse_resume():
+    # print(request.form)
+    # print(request.files)
+    file = request.files['file']
+    filename = file.filename
+    # Convert flask file to a pathfile for pyresparser
+    with tempfile.NamedTemporaryFile(delete=True) as tmp:
+        file.save(tmp.name+'.pdf')
+        path = pathlib.Path(tmp.name+'.pdf')
+        data = ResumeParser(str(path)).get_extracted_data()
+
+    print(data['skills'])
+    # Save the file to the cache directory
+    return jsonify({'message': 'File uploaded successfully and parsed'})
 
 
 if __name__ == '__main__':

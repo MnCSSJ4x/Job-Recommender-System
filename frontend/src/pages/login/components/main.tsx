@@ -1,6 +1,7 @@
 import axios from "axios";
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { useRouter } from "next/router";
 import {BACKEND_HOME} from "../../constant" 
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
@@ -23,6 +24,7 @@ if (!firebase.apps.length) {
 
 const Main = () => {
   const userTest = useState([]);
+  const router = useRouter(); 
   const handleGoogleSignIn = () => {
     const provider = new firebase.auth.GoogleAuthProvider()
     firebase.auth().signInWithPopup(provider).then(function(result) {
@@ -33,9 +35,12 @@ const Main = () => {
           .then(response => {
             //use response to move to next page 
             if(response.data.firstTime===true){
+              router.push('/welcome'); 
 
             }
             else{
+              router.push('/welcome'); 
+              //goto different page 
               
             }
             console.log(response.data)

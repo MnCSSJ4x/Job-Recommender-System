@@ -96,7 +96,17 @@ def handle_upload_parse_resume():
         path = pathlib.Path(tmp.name+'.pdf')
         data = ResumeParser(str(path)).get_extracted_data()
 
-    print(data['skills'])
+    uid = request.form['sentBy']
+    users_ref = db.collection(u'users').document(uid)
+
+    if users_ref.get().exists:
+        users_ref.update({
+            'resume_extract': data
+        })
+
+    else:
+        return jsonify({'message': 'File uploaded successfully, Parsing done, Firebase error - User Doesnt exist'})
+
     # Save the file to the cache directory
     return jsonify({'message': 'File uploaded successfully and parsed'})
 

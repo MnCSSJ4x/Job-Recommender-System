@@ -23,7 +23,6 @@ if (!firebase.apps.length) {
 }
 
 const Main = () => {
-  const userTest = useState([]);
   const router = useRouter(); 
   const handleGoogleSignIn = () => {
     const provider = new firebase.auth.GoogleAuthProvider()
@@ -35,11 +34,10 @@ const Main = () => {
           .then(response => {
             //use response to move to next page 
             if(response.data.firstTime===true){
-              router.push('/welcome'); 
-
+              router.push({pathname: '/welcome', query: { userID: response.data.userID}}); 
             }
             else{
-              router.push('/welcome'); 
+              router.push({pathname: '/welcome', query: { userID: response.data.userID }}); 
               //goto different page 
               
             }

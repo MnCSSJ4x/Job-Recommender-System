@@ -1,20 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {BACKEND_HOME} from "../../constant" 
 import axios from 'axios';
 import { useState } from 'react';
-const Main = () => {
+import { useRouter } from 'next/router';
+const Main = (props:any) => {
   const [file, setFile] = useState<File>();
-
+  const router = useRouter(); 
+  const uid:any = router.query.userID; 
   const handleFileChange = (event:any) => {
     console.log(event.target)
     setFile(event.target.files[0]);
   };
-
   const handleSubmit = async (event:any) => {
     event.preventDefault();
     let formData = new FormData();
    
-    formData.append('sentBy','monjoy')
+    formData.append('sentBy',uid?.toString())
     formData.append('file', file!);
     axios.post(BACKEND_HOME+'/upload', formData).then(()=>{
       console.log("TIS DONE")

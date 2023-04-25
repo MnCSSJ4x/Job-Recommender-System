@@ -19,10 +19,10 @@ model = AutoModel.from_pretrained(
 ).to(torch.device(device))
 print("Server device detected! Running on ", device)
 
-# with open("jobEmbeddingArya.pickle", "rb") as f:
-#     # Use pickle to load the variable from the file
-#     job_embeddings = torch.load(f, map_location=torch.device("cpu"))
-job_embeddings = torch.load("jobEmbeddingArya.pickle", map_location=torch.device("cpu"))
+with open("jobEmbeddingArya.pickle", "rb") as f:
+    # Use pickle to load the variable from the file
+    job_embeddings = pickle.load(f)
+
 print("Loading of job descriptions done!")
 df = pd.read_csv("cleaned_jobs.csv")
 df = df.rename(columns={"Unnamed: 0": "Index"}).set_index("Index")
@@ -95,4 +95,3 @@ def getCosineMatrix(userResume):
 
 if __name__ == "__main__":
     CosineMatrix, merged_df = getCosineMatrix("I am familiar with python")
-    CosineMatrix.head()

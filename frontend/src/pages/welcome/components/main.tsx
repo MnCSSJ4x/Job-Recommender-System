@@ -17,8 +17,9 @@ const Main = (props:any) => {
    
     formData.append('sentBy',uid?.toString())
     formData.append('file', file!);
-    axios.post(BACKEND_HOME+'/upload', formData).then(()=>{
-      console.log("TIS DONE")
+    axios.post(BACKEND_HOME+'/upload', formData).then((response)=>{
+      console.log("TIS DONE");
+      router.push({pathname: '/select', query: { userID: response.data.userID }}); 
     }).catch(error => {
       console.log(error)
     })

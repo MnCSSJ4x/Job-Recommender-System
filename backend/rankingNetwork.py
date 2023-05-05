@@ -19,14 +19,15 @@ model = AutoModel.from_pretrained(
 ).to(torch.device(device))
 print("Server device detected! Running on ", device)
 
-# with open("jobEmbeddingArya.pickle", "rb") as f:
-#     # Use pickle to load the variable from the file
-#     job_embeddings = torch.load(f, map_location=torch.device("cpu"))
-job_embeddings = torch.load("jobEmbeddingArya.pickle", map_location=torch.device("cpu"))
+with open("data_analyst_embedding.pickle", "rb") as f:
+    # Use pickle to load the variable from the file
+    job_embeddings = pickle.load(f)
+
 print("Loading of job descriptions done!")
-df = pd.read_csv("cleaned_jobs.csv")
-df = df.rename(columns={"Unnamed: 0": "Index"}).set_index("Index")
-df.head()
+df=pd.read_csv("cleaned_jobs.csv").reset_index()
+df=df.rename(columns={'index':'Index','Job Description':'Description'})
+df=df.set_index('Index')
+# df = df.rename(columns={"Unnamed: 0": "Index"}).set_index("Index")
 
 
 def mean_pooling(model_output, attention_mask):
@@ -71,11 +72,12 @@ def getCosineMatrix(userResume):
     Embedding_df = pd.DataFrame(permutations, columns=["tensor1", "tensor2"])
 
     # Display the resulting DataFrame
-    #     print(Embedding_df.shape)
+
+ 
     Embedding_df["Index"] = range(tensor2.shape[0])
     Embedding_df.set_index("Index")
     Embedding_df["cosine_similarity"] = np.zeros((Embedding_df.shape[0]))
-    #     print(Embedding_df.shape)
+
 
     for i in range(math.ceil(Embedding_df.shape[0])):
         tensor1 = Embedding_df.iloc[i]["tensor1"]
@@ -95,4 +97,3 @@ def getCosineMatrix(userResume):
 
 if __name__ == "__main__":
     CosineMatrix, merged_df = getCosineMatrix("I am familiar with python")
-    CosineMatrix.head()

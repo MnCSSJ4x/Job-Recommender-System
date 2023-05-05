@@ -8,6 +8,8 @@ import os
 from pyresparser import ResumeParser
 import tempfile
 import pathlib
+from rankingNetwork import * 
+import pandas as pd
 
 
 app = Flask(__name__)  # Initialze flask constructor
@@ -31,12 +33,7 @@ cred = credentials.Certificate(
     'recsys-219cb-firebase-adminsdk-xp1fv-18a74f46aa.json')
 firebase_admin.initialize_app(cred)
 db = firestore.client()
-# doc_ref = db.collection(u'users').document(u'alovelace')
-# doc_ref.set({
-#     u'first': u'Ada',
-#     u'last': u'Lovelace',
-#     u'born': 1815
-# })
+
 
 
 @app.route('/signin', methods=['POST'])
@@ -103,12 +100,34 @@ def handle_upload_parse_resume():
         users_ref.update({
             'resume_extract': data
         })
+        
 
     else:
         return jsonify({'message': 'File uploaded successfully, Parsing done, Firebase error - User Doesnt exist'})
 
     # Save the file to the cache directory
-    return jsonify({'message': 'File uploaded successfully and parsed'})
+    return jsonify({'message': 'File uploaded successfully and parsed','userID':uid})
+
+@app.route('/getRecommendation',methods=['POST'])
+@cross_origin(origins=['*'])
+def getRecommendation():
+    #get user info 
+    uid = request.form['sentBy']
+    k =int( request.form['number'])
+    users_ref = db.collection(u'users').document(uid)
+    if users_ref.get().exists:
+       user_data = users_ref.get().to_dict()
+       skillset = user_data['resume_extract']['skills']
+       skillset = ' '.join(skillset)
+       CosineMatrix,merged_df = getCosineMatrix(skillset)
+       merged_df.drop(columns=["tensor1","tensor2","cosine_similarity"],inplace=True)
+       subset = merged_df.iloc[0:k]
+       json_data = subset.to_json(orient='records')
+       return jsonify({'message': 'Recommendation obtained succesfully', 'recommendations':json_data, 'userID':uid})
+    
+    else:
+        return jsonify({'message': 'User Doesnt exist'})
+
 
 
 if __name__ == '__main__':

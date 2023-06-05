@@ -8,18 +8,18 @@ Job Postings available on websites like LinkedIn, Glassdoor,
 Internshala, etc. The system is designed to provide personalized
 job recommendations to users based on their skills, experience,
 and career goals.
-![Homescreen](https://github.com/MnCSSJ4x/Job-Recommender-System/blob/main/screenshots/1.png)  
+![Homescreen](./screenshots/1.png)  
 ### What a user need to do? 
 Simply sign up using your gmail id and upload your resume. It can then extract useful information from your resume (such as skills) and recommend you the suitable jobs.
-![Login](https://github.com/MnCSSJ4x/Job-Recommender-System/blob/main/screenshots/2.png) 
-![Resume upload](https://github.com/MnCSSJ4x/Job-Recommender-System/blob/main/screenshots/3.png) 
+![Login](./screenshots/2.png) 
+![Resume upload](./screenshots/3.png) 
 ### Tech Stack 
 - Frontend: NextJS with Tailwind-css 
 - Backend: Flask 
 - Model: BERT based transformer which is pre-trained on job descriptions. On the embeddings obtained, we apply cosine similarity and rank the job based on the user resume
 - Webscrapping done using selenium and geckodriver
-![Select Number of recommendations](https://github.com/MnCSSJ4x/Job-Recommender-System/blob/main/screenshots/4.png) 
-![Recommendations](https://github.com/MnCSSJ4x/Job-Recommender-System/blob/main/screenshots/5.png) 
+![Select Number of recommendations](./screenshots/4.png) 
+![Recommendations](./screenshots/5.png) 
 ### How to run the application (locally for testing) 
 - Clone this repository 
 - For the frontend folder: 
